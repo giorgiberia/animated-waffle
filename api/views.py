@@ -18,6 +18,7 @@ class GithubUserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
+
     queryset = GithubUser.objects.all()
     serializer_class = GithubUserSerializer
     permission_classes = [permissions.AllowAny]
@@ -25,7 +26,9 @@ class GithubUserViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         users = self.get_queryset()
         serializer = self.get_serializer(users, many=True)
-        return JsonResponse({"error": False, "msg": "Users", "result": serializer.data}, status=200)
+        return JsonResponse(
+            {"error": False, "msg": "Users", "result": serializer.data}, status=200
+        )
 
     def retrieve(self, request, pk=None, **kwargs):
         username = str(pk).lower()
@@ -37,7 +40,9 @@ class GithubUserViewSet(viewsets.ModelViewSet):
             user_details = get_gihtub_user_details(username)
 
             if not user_details:
-                return JsonResponse({"error": True, "msg": "User not found", "result": {}}, status=404)
+                return JsonResponse(
+                    {"error": True, "msg": "User not found", "result": {}}, status=404
+                )
 
             new_user = GithubUser(
                 username=user_details["login"].lower(),
@@ -52,4 +57,6 @@ class GithubUserViewSet(viewsets.ModelViewSet):
             new_user.save()
             serializer = GithubUserSerializer(new_user)
 
-        return JsonResponse({"error": False, "msg": "User", "result": serializer.data}, status=200)
+        return JsonResponse(
+            {"error": False, "msg": "User", "result": serializer.data}, status=200
+        )
