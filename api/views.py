@@ -2,14 +2,15 @@ import datetime
 
 import requests
 from django.http import JsonResponse
-from rest_framework import viewsets, permissions
+from rest_framework import permissions
+from rest_framework import viewsets
 
 from api.models import GithubUser
 from api.serializers import GithubUserSerializer
 
 
 def get_gihtub_user_details(username):
-    url = "https://api.github.com/users/{}".format(username)
+    url = f"https://api.github.com/users/{username}"
     response = requests.get(url)
     return response.json() if response.status_code == 200 else None
 
@@ -18,6 +19,7 @@ class GithubUserViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     """
+
     queryset = GithubUser.objects.all()
     serializer_class = GithubUserSerializer
     permission_classes = [permissions.AllowAny]
@@ -25,7 +27,13 @@ class GithubUserViewSet(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         users = self.get_queryset()
         serializer = self.get_serializer(users, many=True)
-        return JsonResponse({"error": False, "msg": "Users", "result": serializer.data}, status=200)
+        return JsonResponse(
+            {
+                "error": False,
+                "msg": "Users",
+                "result": serializer.data
+            },
+            status=200)
 
     def retrieve(self, request, pk=None, **kwargs):
         username = str(pk).lower()
@@ -37,7 +45,13 @@ class GithubUserViewSet(viewsets.ModelViewSet):
             user_details = get_gihtub_user_details(username)
 
             if not user_details:
-                return JsonResponse({"error": True, "msg": "User not found", "result": {}}, status=404)
+                return JsonResponse(
+                    {
+                        "error": True,
+                        "msg": "User not found",
+                        "result": {}
+                    },
+                    status=404)
 
             new_user = GithubUser(
                 username=user_details["login"].lower(),
@@ -52,5 +66,10 @@ class GithubUserViewSet(viewsets.ModelViewSet):
             new_user.save()
             serializer = GithubUserSerializer(new_user)
 
-        return JsonResponse({"error": False, "msg": "User", "result": serializer.data}, status=200)
-
+        return JsonResponse(
+            {
+                "error": False,
+                "msg": "User",
+                "result": serializer.data
+            },
+            status=200)
