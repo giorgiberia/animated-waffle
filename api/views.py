@@ -9,7 +9,7 @@ from api.serializers import GithubUserSerializer
 
 
 def get_gihtub_user_details(username):
-    url = "https://api.github.com/users/{}".format(username)
+    url = f"https://api.github.com/users/{username}"
     response = requests.get(url)
     return response.json() if response.status_code == 200 else None
 
