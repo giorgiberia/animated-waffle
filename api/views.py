@@ -2,7 +2,8 @@ import datetime
 
 import requests
 from django.http import JsonResponse
-from rest_framework import permissions, viewsets
+from rest_framework import permissions
+from rest_framework import viewsets
 
 from api.models import GithubUser
 from api.serializers import GithubUserSerializer
