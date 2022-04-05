@@ -28,8 +28,12 @@ class GithubUserViewSet(viewsets.ModelViewSet):
         users = self.get_queryset()
         serializer = self.get_serializer(users, many=True)
         return JsonResponse(
-            {"error": False, "msg": "Users", "result": serializer.data}, status=200
-        )
+            {
+                "error": False,
+                "msg": "Users",
+                "result": serializer.data
+            },
+            status=200)
 
     def retrieve(self, request, pk=None, **kwargs):
         username = str(pk).lower()
@@ -42,8 +46,12 @@ class GithubUserViewSet(viewsets.ModelViewSet):
 
             if not user_details:
                 return JsonResponse(
-                    {"error": True, "msg": "User not found", "result": {}}, status=404
-                )
+                    {
+                        "error": True,
+                        "msg": "User not found",
+                        "result": {}
+                    },
+                    status=404)
 
             new_user = GithubUser(
                 username=user_details["login"].lower(),
@@ -59,5 +67,9 @@ class GithubUserViewSet(viewsets.ModelViewSet):
             serializer = GithubUserSerializer(new_user)
 
         return JsonResponse(
-            {"error": False, "msg": "User", "result": serializer.data}, status=200
-        )
+            {
+                "error": False,
+                "msg": "User",
+                "result": serializer.data
+            },
+            status=200)
