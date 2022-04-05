@@ -53,4 +53,3 @@ class GithubUserViewSet(viewsets.ModelViewSet):
             serializer = GithubUserSerializer(new_user)
 
         return JsonResponse({"error": False, "msg": "User", "result": serializer.data}, status=200)
-
